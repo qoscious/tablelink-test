@@ -1,0 +1,14 @@
+# Config placeholder 
+app:
+  grpc_port: 50051
+  jwt_secret: "supersecretjwt"
+database:
+  host: "localhost"
+  port: 5432
+  user: "postgres"
+  password: "postgres"
+  dbname: "tablelink"
+redis:
+  addr: "localhost:6379"
+  password: ""
+  db: 0 
