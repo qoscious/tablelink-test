@@ -6,11 +6,14 @@ import (
 	"log"
 	"net"
 	"os"
-	"tablelink_test/internal/delivery/grpc"
+	"time"
+
+	deliverygrpc "tablelink_test/internal/delivery/grpc"
 	"tablelink_test/internal/repository"
 	"tablelink_test/internal/usecase"
 	"tablelink_test/pkg"
-	"time"
+	authpb "tablelink_test/proto/auth"
+	userpb "tablelink_test/proto/user"
 
 	"google.golang.org/grpc"
 	"gopkg.in/yaml.v2"
@@ -66,13 +69,11 @@ func main() {
 	userUC := usecase.NewUserUsecase(userRepo, roleRepo, roleRightRepo, sessionRepo, jwtManager)
 
 	grpcServer := grpc.NewServer()
-	authHandler := &grpc.AuthServiceServer{AuthUC: authUC}
-	userHandler := &grpc.UserServiceServer{UserUC: userUC}
+	authHandler := &deliverygrpc.AuthServiceServer{AuthUC: authUC}
+	userHandler := &deliverygrpc.UserServiceServer{UserUC: userUC}
 
-	// Register gRPC service
-	// TODO: Import package proto hasil generate dan register service
-	// authpb.RegisterAuthServiceServer(grpcServer, authHandler)
-	// userpb.RegisterUserServiceServer(grpcServer, userHandler)
+	authpb.RegisterAuthServiceServer(grpcServer, authHandler)
+	userpb.RegisterUserServiceServer(grpcServer, userHandler)
 
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", cfg.App.GrpcPort))
 	if err != nil {

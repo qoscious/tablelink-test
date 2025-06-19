@@ -1,5 +1,6 @@
 syntax = "proto3";
 package user;
+option go_package = "tablelink_test/proto/user";
 
 service UserService {
   rpc GetAllUser(GetAllUserRequest) returns (GetAllUserResponse);
